@@ -172,7 +172,7 @@ namespace multiEnd
                 _spriteBatch.DrawString(
                     garamond,
                     Text.resultsArray[Text.finalResults],
-                    new Vector2(gameWidth / 5, gameHeight / 5),
+                    new Vector2(gameWidth / 7, gameHeight / 5),
                     Color.Pink,
                     0f,
                     Vector2.Zero,
