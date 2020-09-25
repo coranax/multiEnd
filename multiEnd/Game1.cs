@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace multiEnd
 {
@@ -26,6 +27,9 @@ namespace multiEnd
         int next; //advance to next question
         int numQuestions; //max questions, initialized to length of Text.questionArray
 
+        public static Texture2D buttonTexture;
+        Button buttonA, buttonB, buttonC;
+
 
         public Game1()
         {
@@ -49,6 +53,7 @@ namespace multiEnd
 
             numQuestions = Text.questionArray.Length;
 
+
             base.Initialize();
         }
 
@@ -68,6 +73,11 @@ namespace multiEnd
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             garamond = Content.Load<SpriteFont>("garamond");
+            buttonTexture = Content.Load<Texture2D>("button");
+
+            buttonA = new Button("buttonA", buttonTexture, 100, 100);
+            buttonB = new Button("buttonB", buttonTexture, 100, 200);
+            buttonC = new Button("buttonC", buttonTexture, 100, 300);
         }
 
         protected override void Update(GameTime gameTime)
@@ -111,6 +121,11 @@ namespace multiEnd
                     }                        
                     break;
             }
+
+            buttonA.Update(gameTime);
+            buttonB.Update(gameTime);
+            buttonC.Update(gameTime);
+
 
             oldState = newState; //for KeyPressed()
             base.Update(gameTime);
@@ -191,6 +206,11 @@ namespace multiEnd
                 1f,
                 SpriteEffects.None,
                 0f);
+
+            //buttons!!!
+            buttonA.Draw(_spriteBatch);
+            buttonB.Draw(_spriteBatch);
+            buttonC.Draw(_spriteBatch);
 
             _spriteBatch.End();
             base.Draw(gameTime);
