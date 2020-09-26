@@ -40,12 +40,12 @@ namespace multiEnd
 
         public bool EnterButton() //checking mouse position vs button position
         {
-            if (Mouse.GetState().X < buttonX + (buttonTexture.Width / 2) &&
+            if (Mouse.GetState().X < buttonX + (buttonTexture.Width / 4) &&
                 Mouse.GetState().X > buttonX &&
                 Mouse.GetState().Y < buttonY + (buttonTexture.Height / 2) &&
                 Mouse.GetState().Y > buttonY)
             {
-                Trace.WriteLine("here's a button");
+                Trace.WriteLine("you found a button");
                 return true;
             }
             Trace.WriteLine("no buttons");
@@ -96,22 +96,34 @@ namespace multiEnd
 
         public void Draw(SpriteBatch _spriteBatch)
         {
-            switch (name)
+            switch (name) //decides which rectangle to use, depending on the name of the button and if the button is hovered over
             {
                 case "startButton":
-                    buttonRect = new Rectangle(100, 50, 100, 50);
+                    if (EnterButton() == true)
+                        buttonRect = new Rectangle(300, 50, 100, 50);
+                    else
+                        buttonRect = new Rectangle(100, 50, 100, 50);
                     break;
 
                 case "buttonA":
-                    buttonRect = new Rectangle(0, 0, 100, 50);
+                    if (EnterButton() == true)
+                        buttonRect = new Rectangle(200, 0, 100, 50);
+                    else
+                        buttonRect = new Rectangle(0, 0, 100, 50);
                     break;
 
                 case "buttonB":
-                    buttonRect = new Rectangle(100, 0, 100, 50);
+                    if (EnterButton() == true)
+                        buttonRect = new Rectangle(300, 0, 100, 50);
+                    else
+                        buttonRect = new Rectangle(100, 0, 100, 50);
                     break;
 
                 case "buttonC":
-                    buttonRect = new Rectangle(0, 50, 100, 50);
+                    if (EnterButton() == true)
+                        buttonRect = new Rectangle(200, 50, 100, 50);
+                    else
+                        buttonRect = new Rectangle(0, 50, 100, 50);
                     break;
             }
 

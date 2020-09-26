@@ -79,10 +79,10 @@ namespace multiEnd
             garamond = Content.Load<SpriteFont>("garamond");
             buttonTexture = Content.Load<Texture2D>("button");
 
-            startButton = new Button("startButton", buttonTexture, 500, 500);
-            buttonA = new Button("buttonA", buttonTexture, 100, 100);
-            buttonB = new Button("buttonB", buttonTexture, 100, 200);
-            buttonC = new Button("buttonC", buttonTexture, 100, 300);
+            startButton = new Button("startButton", buttonTexture, 250, 250);
+            buttonA = new Button("buttonA", buttonTexture, 100, 300);
+            buttonB = new Button("buttonB", buttonTexture, 250, 300);
+            buttonC = new Button("buttonC", buttonTexture, 400, 300);
         }
 
         protected override void Update(GameTime gameTime)
@@ -95,7 +95,7 @@ namespace multiEnd
             switch (gameStatus)
             {
                 case GameStatus.START:
-                    instructionText = "Press Enter to Start.";
+                    instructionText = "Press Enter or button to Start.";
                     if (KeyPressed(Keys.Enter) || ButtonPressed(4))
                     {
                         gameStatus = GameStatus.QUESTION;
@@ -103,7 +103,7 @@ namespace multiEnd
                     break;
 
                 case GameStatus.QUESTION:
-                    instructionText = "Answer each question with honesty.\r\nType your answer: A, B, or C.";
+                    instructionText = "Answer each question with honesty.\r\nType your click your answer: A, B, or C.";
                     if (KeyPressed(Keys.A) || KeyPressed(Keys.B) || KeyPressed(Keys.C)) //keys
                     {
                         next++;
@@ -137,10 +137,11 @@ namespace multiEnd
                     break;
             }
 
+            //for each button the respective .Update() call must be made
             buttonA.Update(gameTime);
             buttonB.Update(gameTime);
             buttonC.Update(gameTime);
-
+            startButton.Update(gameTime);
 
             oldState = newState; //for KeyPressed()
             base.Update(gameTime);
