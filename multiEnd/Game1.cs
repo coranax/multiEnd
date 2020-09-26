@@ -18,8 +18,10 @@ namespace multiEnd
         KeyboardState newState, oldState; // for KeyPressed()
         Keys newKey; //for AddScore()
 
-        enum GameStatus { START, QUESTION, END };
-        GameStatus gameStatus;
+        public static int currentButton; //1 = A, 2 = B, 3 = C, 4 = start for ButtonPressed()
+
+        public enum GameStatus { START, QUESTION, END };
+        public static GameStatus gameStatus;
         int A, B, C;
 
         string instructionText;
@@ -28,7 +30,7 @@ namespace multiEnd
         int numQuestions; //max questions, initialized to length of Text.questionArray
 
         public static Texture2D buttonTexture;
-        Button buttonA, buttonB, buttonC;
+        Button startButton, buttonA, buttonB, buttonC;
 
 
         public Game1()
@@ -67,6 +69,8 @@ namespace multiEnd
 
             next = 0;
             instructionText = "";
+
+            currentButton = 0;
         }
 
         protected override void LoadContent()
@@ -75,6 +79,7 @@ namespace multiEnd
             garamond = Content.Load<SpriteFont>("garamond");
             buttonTexture = Content.Load<Texture2D>("button");
 
+            startButton = new Button("startButton", buttonTexture, 500, 500);
             buttonA = new Button("buttonA", buttonTexture, 100, 100);
             buttonB = new Button("buttonB", buttonTexture, 100, 200);
             buttonC = new Button("buttonC", buttonTexture, 100, 300);
@@ -88,27 +93,37 @@ namespace multiEnd
             newState = Keyboard.GetState(); //for KeyPressed()
 
             switch (gameStatus)
-            {                
+            {
                 case GameStatus.START:
                     instructionText = "Press Enter to Start.";
-                    if (KeyPressed(Keys.Enter))
+                    if (KeyPressed(Keys.Enter) || ButtonPressed(4))
                     {
                         gameStatus = GameStatus.QUESTION;
-                    }                        
+                    }
                     break;
 
                 case GameStatus.QUESTION:
                     instructionText = "Answer each question with honesty.\r\nType your answer: A, B, or C.";
-                    if (KeyPressed(Keys.A) || KeyPressed(Keys.B) || KeyPressed(Keys.C))
+                    if (KeyPressed(Keys.A) || KeyPressed(Keys.B) || KeyPressed(Keys.C)) //keys
                     {
                         next++;
-                        AddScore(newKey);
+                        AddScore(newKey); //relies on KeyPressed()
                         Text.NextQuestion();
                         if (next >= numQuestions)
                         {
                             gameStatus = GameStatus.END;
                         }
-                    }             
+                    }
+                    if (ButtonPressed(1) || ButtonPressed(2) || ButtonPressed(3)) //buttons
+                    {
+                        next++;
+                        AddScoreButton(currentButton); //current button is changed in the Button class
+                        Text.NextQuestion();
+                        if (next >= numQuestions)
+                        {
+                            gameStatus = GameStatus.END;
+                        }
+                    }
                     break;
 
                 case GameStatus.END:                    
@@ -150,6 +165,32 @@ namespace multiEnd
                 B++;
             if (key == Keys.C)
                 C++;
+        }
+
+        public bool ButtonPressed(int button) //getter for which button has been pressed
+        {
+            if (button == currentButton)
+                return true;
+            else return false;
+        }
+
+        public void AddScoreButton(int button) //increment score totals... with buttons
+        {
+            if (button == 1)
+            {
+                A++;
+                currentButton = 0;
+            }
+            if (button == 2)
+            {
+                B++;
+                currentButton = 0;
+            }
+            if (button == 3)
+            {
+                C++;
+                currentButton = 0;
+            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -208,9 +249,17 @@ namespace multiEnd
                 0f);
 
             //buttons!!!
-            buttonA.Draw(_spriteBatch);
-            buttonB.Draw(_spriteBatch);
-            buttonC.Draw(_spriteBatch);
+            if (gameStatus == GameStatus.START)
+            {
+                startButton.Draw(_spriteBatch);
+            }
+
+            if (gameStatus == GameStatus.QUESTION)
+            {
+                buttonA.Draw(_spriteBatch);
+                buttonB.Draw(_spriteBatch);
+                buttonC.Draw(_spriteBatch);
+            }
 
             _spriteBatch.End();
             base.Draw(gameTime);

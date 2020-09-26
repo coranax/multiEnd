@@ -10,6 +10,7 @@ namespace multiEnd
         int buttonX, buttonY; //position on the screen
         string name;
         Texture2D buttonTexture = Game1.buttonTexture;
+        Rectangle buttonRect;
 
         MouseState mNewState, mOldState; //for MousePressed()
 
@@ -39,13 +40,15 @@ namespace multiEnd
 
         public bool EnterButton() //checking mouse position vs button position
         {
-            if (Mouse.GetState().X < buttonX + buttonTexture.Width &&
+            if (Mouse.GetState().X < buttonX + (buttonTexture.Width / 2) &&
                 Mouse.GetState().X > buttonX &&
-                Mouse.GetState().Y < buttonY + buttonTexture.Height &&
+                Mouse.GetState().Y < buttonY + (buttonTexture.Height / 2) &&
                 Mouse.GetState().Y > buttonY)
             {
+                Trace.WriteLine("here's a button");
                 return true;
             }
+            Trace.WriteLine("no buttons");
             return false;
         }
 
@@ -61,29 +64,58 @@ namespace multiEnd
 
         public void Update(GameTime gameTime)
         {
-            mNewState = Mouse.GetState(); //for KeyPressed()
+            mNewState = Mouse.GetState(); //for MousePressed()
+
             if (EnterButton() && MousePressed())
-            {
-                switch (name)
                 {
-                    case "buttonA":
-                        Trace.WriteLine(name);
-                        break;
+                    switch (name)
+                    {
+                        case "startButton":
+                            Trace.WriteLine(name);
+                            Game1.currentButton = 4;
+                            break;
 
-                    case "buttonB":
-                        Trace.WriteLine(name);
-                        break;
+                        case "buttonA":
+                            Trace.WriteLine(name);
+                            Game1.currentButton = 1;
+                            break;
 
-                    case "buttonC":
-                        Trace.WriteLine(name);
-                        break;
-                }
+                        case "buttonB":
+                            Trace.WriteLine(name);
+                            Game1.currentButton = 2;
+                            break;
+
+                        case "buttonC":
+                            Trace.WriteLine(name);
+                            Game1.currentButton = 3;
+                            break;
+                    }
             }
             mOldState = mNewState;
         }
+
         public void Draw(SpriteBatch _spriteBatch)
         {
-            _spriteBatch.Draw(buttonTexture, new Vector2(ButtonX,ButtonY), new Rectangle(0, 0, buttonTexture.Width, buttonTexture.Height), Color.White);
+            switch (name)
+            {
+                case "startButton":
+                    buttonRect = new Rectangle(100, 50, 100, 50);
+                    break;
+
+                case "buttonA":
+                    buttonRect = new Rectangle(0, 0, 100, 50);
+                    break;
+
+                case "buttonB":
+                    buttonRect = new Rectangle(100, 0, 100, 50);
+                    break;
+
+                case "buttonC":
+                    buttonRect = new Rectangle(0, 50, 100, 50);
+                    break;
+            }
+
+            _spriteBatch.Draw(buttonTexture, new Vector2(ButtonX,ButtonY), buttonRect, Color.White);
         }
     }
 }
